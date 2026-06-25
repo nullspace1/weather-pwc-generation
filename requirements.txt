@@ -1,0 +1,7 @@
+pytest
+pandas
+pydantic
+requests
+fastapi
+uvicorn
+pywebview

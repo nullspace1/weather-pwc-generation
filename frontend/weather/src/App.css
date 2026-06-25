@@ -1,0 +1,277 @@
+.app {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.tab-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.tab.active {
+  background: var(--accent-bg);
+  border-color: var(--border);
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.app-main {
+  flex: 1;
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.app-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  text-align: left;
+}
+
+.card-title {
+  font-family: var(--heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-h);
+  margin-bottom: 20px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .input {
+  flex: 1;
+}
+
+.field-actions {
+  justify-content: flex-end;
+  align-self: end;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.input:focus-visible,
+.select:focus-visible,
+.button:focus-visible,
+.result-item:focus-visible,
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: var(--accent-bg);
+}
+
+.message {
+  font-size: 0.875rem;
+}
+
+.message.error {
+  color: var(--error);
+}
+
+.message.success {
+  color: var(--success);
+}
+
+.selection {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selection-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.selection-value {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.selection-meta {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.result-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  text-align: left;
+}
+
+.result-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.result-name {
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.result-meta {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .field-row {
+    flex-direction: column;
+  }
+
+  .app-main {
+    padding: 24px 16px;
+  }
+}
