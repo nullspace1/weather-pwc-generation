@@ -1,11 +1,18 @@
+import { useEffect } from 'react'
 import { Card } from './Card'
+import { folderState } from '../states/folderState'
 import { locationState } from '../states/locationState'
 import { weatherGenerationState } from '../states/weatherGenerationState'
 import { useStateObject } from '../states/useStateObject'
 
 export function WeatherGenerationCard() {
   const location = useStateObject(locationState)
+  const folder = useStateObject(folderState)
   const generation = useStateObject(weatherGenerationState)
+
+  useEffect(() => {
+    void folderState.loadSelectedFolder()
+  }, [])
 
   const handleGenerate = () => {
     if (!location.selected) {
@@ -16,9 +23,10 @@ export function WeatherGenerationCard() {
 
   const canGenerate =
     location.selected !== null &&
+    folder.selectedPath !== null &&
     generation.fromDate !== '' &&
     generation.toDate !== '' &&
-    generation.outputPath.trim() !== ''
+    generation.fileName.trim() !== ''
 
   return (
     <Card title="Generate weather data">
@@ -43,14 +51,35 @@ export function WeatherGenerationCard() {
           />
         </label>
 
+        <div className="field">
+          <span className="field-label">Output folder</span>
+          <div className="field-row">
+            <input
+              type="text"
+              className="input"
+              readOnly
+              placeholder="No folder selected"
+              value={folder.selectedPath ?? ''}
+            />
+            <button
+              type="button"
+              className="button"
+              onClick={() => void folder.selectFolder()}
+              disabled={folder.loading}
+            >
+              {folder.loading ? 'Selecting…' : 'Select folder'}
+            </button>
+          </div>
+        </div>
+
         <label className="field">
-          <span className="field-label">Output file path</span>
+          <span className="field-label">File name</span>
           <input
             type="text"
             className="input"
-            placeholder="C:\data\weather.csv"
-            value={generation.outputPath}
-            onChange={(event) => generation.setOutputPath(event.target.value)}
+            placeholder="data.wea"
+            value={generation.fileName}
+            onChange={(event) => generation.setFileName(event.target.value)}
           />
         </label>
 
@@ -58,9 +87,10 @@ export function WeatherGenerationCard() {
           <p className="message">Select a location before generating weather data.</p>
         )}
 
+        {folder.error && <p className="message error">{folder.error}</p>}
         {generation.error && <p className="message error">{generation.error}</p>}
-        {generation.success && (
-          <p className="message success">Weather data saved to {generation.outputPath}</p>
+        {generation.success && generation.savedFilePath && (
+          <p className="message success">Weather data saved to {generation.savedFilePath}</p>
         )}
 
         <button
@@ -69,7 +99,7 @@ export function WeatherGenerationCard() {
           onClick={handleGenerate}
           disabled={!canGenerate || generation.loading}
         >
-          {generation.loading ? 'Generating…' : 'Generate CSV'}
+          {generation.loading ? 'Generating…' : 'Generate .wea'}
         </button>
       </div>
     </Card>

@@ -3,5 +3,9 @@ export interface WeatherDataRequestDTO {
   lon: number
   from_date: string
   to_date: string
-  output_path: string
+  file_name: string
+}
+
+export interface WeatherDataResponseDTO {
+  file_path: string
 }

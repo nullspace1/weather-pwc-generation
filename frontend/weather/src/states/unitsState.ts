@@ -35,7 +35,7 @@ class UnitsState {
     }
   }
 
-  async save(units: ConfigUnitsDTO): Promise<void> {
+  async update(units: ConfigUnitsDTO): Promise<void> {
     this.saving = true
     this.error = null
     this.notify()
@@ -44,7 +44,7 @@ class UnitsState {
       await setUnits(units)
       this.units = units
     } catch {
-      this.error = 'Failed to save units'
+      this.error = 'Failed to update units'
     } finally {
       this.saving = false
       this.notify()

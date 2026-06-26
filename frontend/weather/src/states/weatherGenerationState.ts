@@ -5,7 +5,8 @@ type Listener = () => void
 class WeatherGenerationState {
   fromDate = ''
   toDate = ''
-  outputPath = ''
+  fileName = ''
+  savedFilePath: string | null = null
   loading = false
   error: string | null = null
   success = false
@@ -33,8 +34,8 @@ class WeatherGenerationState {
     this.notify()
   }
 
-  setOutputPath(outputPath: string): void {
-    this.outputPath = outputPath
+  setFileName(fileName: string): void {
+    this.fileName = fileName
     this.success = false
     this.notify()
   }
@@ -43,16 +44,18 @@ class WeatherGenerationState {
     this.loading = true
     this.error = null
     this.success = false
+    this.savedFilePath = null
     this.notify()
 
     try {
-      await generateWeatherData({
+      const response = await generateWeatherData({
         lat,
         lon,
         from_date: this.fromDate,
         to_date: this.toDate,
-        output_path: this.outputPath,
+        file_name: this.fileName,
       })
+      this.savedFilePath = response.file_path
       this.success = true
     } catch {
       this.error = 'Failed to generate weather data'

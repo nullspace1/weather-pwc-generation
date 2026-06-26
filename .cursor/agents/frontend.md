@@ -43,7 +43,7 @@ Build and maintain this layout:
   <Weather tab>
     card: search and select a location
     card: select measurement units
-    card: generate weather data (include output file path)
+    card: generate weather data (select output folder, then file name)
 <footer>
 ```
 
@@ -64,7 +64,9 @@ Backend base URL is the FastAPI server (default dev: `http://localhost:8000`). E
 | GET | `/locations?location=` | Search locations |
 | GET | `/config/units` | Read current units |
 | POST | `/config/units` | Set units (query params) |
-| GET | `/weather?lat=&lon=&from_date=&to_date=&output_path=` | Generate weather CSV |
+| GET | `/weather?lat=&lon=&from_date=&to_date=&file_name=` | Generate weather CSV |
+| POST | `/folders/select` | Open native folder dialog and store selection |
+| GET | `/folders/selected` | Read stored output folder |
 
 Define request/response types in `lib/dto/` to match `backend/dto/`. Implement fetch logic in `lib/api/`.
 

@@ -1,17 +1,12 @@
-import type { WeatherDataRequestDTO } from '../dto/weather'
+import type { WeatherDataRequestDTO, WeatherDataResponseDTO } from '../dto/weather'
+import { apiGet } from './client'
 
-const API_BASE_URL = 'http://localhost:8000'
-
-export async function generateWeatherData(request: WeatherDataRequestDTO): Promise<void> {
-  const url = new URL('/weather', API_BASE_URL)
-  url.searchParams.set('lat', String(request.lat))
-  url.searchParams.set('lon', String(request.lon))
-  url.searchParams.set('from_date', request.from_date)
-  url.searchParams.set('to_date', request.to_date)
-  url.searchParams.set('output_path', request.output_path)
-
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`)
-  }
+export function generateWeatherData(request: WeatherDataRequestDTO): Promise<WeatherDataResponseDTO> {
+  return apiGet<WeatherDataResponseDTO>('/weather', {
+    lat: String(request.lat),
+    lon: String(request.lon),
+    from_date: request.from_date,
+    to_date: request.to_date,
+    file_name: request.file_name,
+  })
 }

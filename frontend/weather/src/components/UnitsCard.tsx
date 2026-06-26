@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type {
   ConfigUnitsDTO,
   ETZeroUnits,
@@ -19,40 +19,32 @@ const et0Options: ETZeroUnits[] = ['mm/day', 'cm/day', 'in/day']
 
 export function UnitsCard() {
   const state = useStateObject(unitsState)
-  const [draft, setDraft] = useState<ConfigUnitsDTO | null>(null)
 
   useEffect(() => {
     void state.load()
   }, [state])
 
-  useEffect(() => {
-    if (state.units) {
-      setDraft(state.units)
-    }
-  }, [state.units])
-
   const updateField = <K extends keyof ConfigUnitsDTO>(key: K, value: ConfigUnitsDTO[K]) => {
-    setDraft((current) => (current ? { ...current, [key]: value } : current))
-  }
-
-  const handleSave = () => {
-    if (draft) {
-      void state.save(draft)
+    if (!state.units) {
+      return
     }
+    void state.update({ ...state.units, [key]: value })
   }
 
   return (
     <Card title="Units">
       {state.loading && <p className="message">Loading units…</p>}
+      {state.saving && <p className="message">Saving…</p>}
       {state.error && <p className="message error">{state.error}</p>}
 
-      {draft && (
+      {state.units && (
         <div className="form form-grid">
           <label className="field">
             <span className="field-label">Precipitation</span>
             <select
               className="select"
-              value={draft.precipitation_sum}
+              value={state.units.precipitation_sum}
+              disabled={state.saving}
               onChange={(event) => updateField('precipitation_sum', event.target.value as PrecipitationUnits)}
             >
               {precipitationOptions.map((option) => (
@@ -67,7 +59,8 @@ export function UnitsCard() {
             <span className="field-label">Temperature</span>
             <select
               className="select"
-              value={draft.temperature_2m_mean}
+              value={state.units.temperature_2m_mean}
+              disabled={state.saving}
               onChange={(event) => updateField('temperature_2m_mean', event.target.value as TemperatureUnits)}
             >
               {temperatureOptions.map((option) => (
@@ -82,7 +75,8 @@ export function UnitsCard() {
             <span className="field-label">Wind speed</span>
             <select
               className="select"
-              value={draft.wind_speed_10m_mean}
+              value={state.units.wind_speed_10m_mean}
+              disabled={state.saving}
               onChange={(event) => updateField('wind_speed_10m_mean', event.target.value as WindSpeedUnits)}
             >
               {windSpeedOptions.map((option) => (
@@ -97,7 +91,8 @@ export function UnitsCard() {
             <span className="field-label">Radiation</span>
             <select
               className="select"
-              value={draft.shortwave_radiation_sum}
+              value={state.units.shortwave_radiation_sum}
+              disabled={state.saving}
               onChange={(event) => updateField('shortwave_radiation_sum', event.target.value as RadiationUnits)}
             >
               {radiationOptions.map((option) => (
@@ -112,7 +107,8 @@ export function UnitsCard() {
             <span className="field-label">ET₀</span>
             <select
               className="select"
-              value={draft.et0_fao_evapotranspiration}
+              value={state.units.et0_fao_evapotranspiration}
+              disabled={state.saving}
               onChange={(event) =>
                 updateField('et0_fao_evapotranspiration', event.target.value as ETZeroUnits)
               }
@@ -124,12 +120,6 @@ export function UnitsCard() {
               ))}
             </select>
           </label>
-
-          <div className="field field-actions">
-            <button type="button" className="button" onClick={handleSave} disabled={state.saving}>
-              {state.saving ? 'Saving…' : 'Save units'}
-            </button>
-          </div>
         </div>
       )}
     </Card>

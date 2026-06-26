@@ -48,7 +48,9 @@ Do not invent new top-level folders. Follow the existing service + Protocol patt
 | GET | `/locations` | `location_service.get_locations` | Query: `location` |
 | GET | `/config/units` | `weather_config.get_units` | Returns current units |
 | POST | `/config/units` | `weather_config.set_units` | Query params for unit fields |
-| GET | `/weather` | `weather_service.generate_weather_data` | Query: lat, lon, from_date, to_date, output_path |
+| GET | `/weather` | `weather_service.generate_weather_data` | Query: lat, lon, from_date, to_date, file_name |
+| POST | `/folders/select` | `folder_selection_service.select_folder` | Opens native folder dialog, stores selection |
+| GET | `/folders/selected` | `folder_selection_service.get_selected_folder` | Returns stored output folder |
 
 ## Testing requirements
 
