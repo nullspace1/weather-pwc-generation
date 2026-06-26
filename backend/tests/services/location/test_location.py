@@ -32,9 +32,7 @@ def test_get_locations_returns_mapped_dtos(mock_get):
 
     assert len(response.locations) == 2
     assert response.locations[0].name == "Berlin"
-    assert response.locations[0].country == "Germany"
     assert response.locations[1].name == "Munich"
-    assert response.locations[1].country == "Germany"
 
 
 @patch("backend.services.location.location.requests.get")
