@@ -12,13 +12,19 @@ import webview
 ROOT = Path(__file__).resolve().parent
 BACKEND_DIR = ROOT / "backend"
 FRONTEND_DIR = ROOT / "frontend" / "weather"
-API_URL = "http://127.0.0.1:8000/docs"
-UI_URL = "http://127.0.0.1:8001"
+API_URL = "http://localhost:8000/docs"
+UI_URL = "http://localhost:8001"
 
 
-def _wait_for_url(url: str, timeout: float = 60.0) -> bool:
+def _wait_for_url(
+    url: str,
+    timeout: float = 60.0,
+    process: subprocess.Popen | None = None,
+) -> bool:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
+        if process is not None and process.poll() is not None:
+            return False
         try:
             with urllib.request.urlopen(url, timeout=1):
                 return True
@@ -29,7 +35,7 @@ def _wait_for_url(url: str, timeout: float = 60.0) -> bool:
 
 def _run_backend() -> None:
     env = os.environ.copy()
-    env["PYTHONPATH"] = os.pathsep.join([str(ROOT), str(BACKEND_DIR)])
+    env["PYTHONPATH"] = str(ROOT)
     os.environ.update(env)
     config = uvicorn.Config(
         "backend.main.app:app",
@@ -66,7 +72,11 @@ def _launch() -> None:
     try:
         if not _wait_for_url(API_URL):
             raise RuntimeError(f"Backend did not become ready at {API_URL}")
-        if not _wait_for_url(UI_URL):
+        if not _wait_for_url(UI_URL, process=frontend_process):
+            if frontend_process.poll() is not None:
+                raise RuntimeError(
+                    f"Frontend process exited with code {frontend_process.returncode}"
+                )
             raise RuntimeError(f"Frontend did not become ready at {UI_URL}")
 
         webview.create_window("Weather App", UI_URL, width=1200, height=800)

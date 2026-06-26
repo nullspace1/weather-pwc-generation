@@ -18,6 +18,10 @@ class WeatherResult(BaseModel):
     longitude : float
     daily: WeatherDailyData
     
+class UnitConversion(TypedDict):
+    scale: float
+    offset: float
+    
 type PrecipitationUnits = Literal["cm/day", "mm/day", "in/day"]
 type TemperatureUnits = Literal["C", "F", "K"]
 type WindSpeedUnits = Literal["m/s", "km/h", "mph"]

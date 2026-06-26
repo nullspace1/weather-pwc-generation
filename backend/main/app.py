@@ -8,7 +8,7 @@ from backend.dto.config.output import ConfigUnitsDTO
 from backend.dto.location.input import LocationRequestDTO
 from backend.dto.location.output import LocationResponseDTO
 from backend.dto.weather.input import WeatherDataRequestDTO
-from container import container
+from backend.container.container import container
 from fastapi import Request
 
 app = FastAPI()
@@ -21,13 +21,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/locations")
 async def root(request: Request) -> LocationResponseDTO:
-    return container.location_service.get_locations(LocationRequestDTO.model_validate(request.query_params))
+    return container.location_service.get_locations(LocationRequestDTO.model_validate(dict(request.query_params)))
     
 @app.post("/config/units")
 async def set_units(request: Request):
-    units = ConfigUnitsRequestDTO.model_validate(request.query_params)
+    units = ConfigUnitsRequestDTO.model_validate(dict(request.query_params))
     container.weather_config.set_units(units)
     
 @app.get("/config/units")
@@ -36,7 +37,7 @@ async def get_units() -> ConfigUnitsDTO:
 
 @app.get("/weather")
 async def get_weather(request: Request):
-    container.weather_service.generate_weather_data(WeatherDataRequestDTO.model_validate(request.query_params))
+    container.weather_service.generate_weather_data(WeatherDataRequestDTO.model_validate(dict(request.query_params)))
 
     
 

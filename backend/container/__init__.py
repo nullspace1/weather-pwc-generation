@@ -1,3 +1,3 @@
-from container.container import container
+from .container import container
 
 __all__ = ["container"]

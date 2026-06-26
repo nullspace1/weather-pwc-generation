@@ -1,5 +1,5 @@
-from model.weather import ConfigUnits, WeatherDailyData, WeatherResult
-from services.weather.units_converter import WeatherConverterService
+from backend.model.weather import ConfigUnits, WeatherDailyData, WeatherResult
+from backend.services.weather.units_converter import WeatherConverterService
 
 
 def _make_weather_result() -> WeatherResult:

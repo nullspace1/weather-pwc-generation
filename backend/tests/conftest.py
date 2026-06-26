@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from model.weather import ConfigUnits, WeatherDailyData, WeatherResult
+from backend.model.weather import ConfigUnits, WeatherDailyData, WeatherResult
 
 
 @pytest.fixture

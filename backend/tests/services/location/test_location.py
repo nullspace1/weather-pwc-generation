@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock, patch
 
 from backend.dto.location.input import LocationRequestDTO
-from services.location.location import LocationService
+from backend.services.location.location import LocationService
 
 
-@patch("services.location.location.requests.get")
+@patch("backend.services.location.location.requests.get")
 def test_get_locations_returns_mapped_dtos(mock_get):
     mock_get.return_value = MagicMock(
         json=MagicMock(
@@ -37,7 +37,7 @@ def test_get_locations_returns_mapped_dtos(mock_get):
     assert response.locations[1].country == "Germany"
 
 
-@patch("services.location.location.requests.get")
+@patch("backend.services.location.location.requests.get")
 def test_get_locations_builds_nominatim_url(mock_get):
     mock_get.return_value = MagicMock(json=MagicMock(return_value={"results": []}))
     service = LocationService()
@@ -49,7 +49,7 @@ def test_get_locations_builds_nominatim_url(mock_get):
     )
 
 
-@patch("services.location.location.requests.get")
+@patch("backend.services.location.location.requests.get")
 def test_get_locations_handles_empty_results(mock_get):
     mock_get.return_value = MagicMock(json=MagicMock(return_value={"results": []}))
     service = LocationService()

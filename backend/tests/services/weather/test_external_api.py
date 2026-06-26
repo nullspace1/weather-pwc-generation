@@ -1,10 +1,10 @@
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-from services.weather.external_api import WeatherAPIService
+from backend.services.weather.external_api import WeatherAPIService
 
 
-@patch("services.weather.external_api.requests.get")
+@patch("backend.services.weather.external_api.requests.get")
 def test_get_data_returns_weather_result(mock_get, sample_weather_result):
     mock_get.return_value = MagicMock(
         json=MagicMock(return_value=sample_weather_result.model_dump())
@@ -21,7 +21,7 @@ def test_get_data_returns_weather_result(mock_get, sample_weather_result):
     assert result.daily.temperature_2m_mean == [10.0, 12.0]
 
 
-@patch("services.weather.external_api.requests.get")
+@patch("backend.services.weather.external_api.requests.get")
 def test_get_data_builds_open_meteo_url(mock_get, sample_weather_result):
     mock_get.return_value = MagicMock(
         json=MagicMock(return_value=sample_weather_result.model_dump())
@@ -37,4 +37,4 @@ def test_get_data_builds_open_meteo_url(mock_get, sample_weather_result):
     assert "longitude=-74.0" in called_url
     assert "start_date=2024-01-01" in called_url
     assert "end_date=2024-01-31" in called_url
-    assert "daily=temperature_2m_mean,precipitation_sum,wind_speed_10m_mean,shortwave_radiation_sum" in called_url
+    assert "daily=temperature_2m_mean,precipitation_sum,wind_speed_10m_mean,shortwave_radiation_sum,et0_fao_evapotranspiration" in called_url

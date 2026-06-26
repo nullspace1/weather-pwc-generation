@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-from services.export.export import ExportService
+from backend.services.export.export import ExportService
 
 
 @patch.object(pd.DataFrame, "to_csv")

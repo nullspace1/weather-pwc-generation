@@ -4,10 +4,10 @@ from typing import Protocol, TypedDict
 import pandas as pd
 
 from backend.dto.weather.input import WeatherDataRequestDTO
-from services.config.config import ConfigServiceProtocol
-from model.weather import ConfigUnits, PrecipitationUnits, RadiationUnits, TemperatureUnits, WeatherResult, WindSpeedUnits
-from services.weather.external_api import WeatherAPIServiceProtocol
-from services.weather.units_converter import WeatherConverterServiceProtocol
+from backend.services.config.config import ConfigServiceProtocol
+from backend.model.weather import WeatherResult
+from backend.services.weather.external_api import WeatherAPIServiceProtocol
+from backend.services.weather.units_converter import WeatherConverterServiceProtocol
 
 
 

@@ -1,5 +1,5 @@
 from backend.dto.config.input import ConfigUnitsRequestDTO
-from services.config.config import ConfigService
+from backend.services.config.config import ConfigService
 
 
 def test_default_units_on_init():

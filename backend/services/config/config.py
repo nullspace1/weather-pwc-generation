@@ -1,7 +1,7 @@
 from typing import Any, Protocol
 from backend.dto.config.input import ConfigUnitsRequestDTO
 from backend.dto.config.output import ConfigUnitsDTO
-from model.weather import ConfigUnits
+from backend.model.weather import ConfigUnits
 
 
 class ConfigServiceProtocol(Protocol):

@@ -4,8 +4,8 @@ from unittest.mock import MagicMock, patch
 import pandas as pd
 
 from backend.dto.weather.input import WeatherDataRequestDTO
-from model.weather import ConfigUnits
-from services.weather.weather import WeatherService
+from backend.model.weather import ConfigUnits
+from backend.services.weather.weather import WeatherService
 
 
 def _build_service(
@@ -67,7 +67,7 @@ def test_generate_weather_data_builds_dataframe_columns(
         output_path="weather.csv",
     )
 
-    with patch("services.weather.weather.pd.DataFrame") as mock_dataframe:
+    with patch("backend.services.weather.weather.pd.DataFrame") as mock_dataframe:
         mock_df = MagicMock()
         mock_dataframe.return_value = mock_df
         service.generate_weather_data(dto)
