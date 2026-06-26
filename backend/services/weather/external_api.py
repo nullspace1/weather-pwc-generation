@@ -35,8 +35,6 @@ class WeatherAPIService(WeatherAPIServiceProtocol):
         
         val = response.json()
         
-        print(f"Weather API response: {val}")
-        
         return WeatherResult.model_validate(val)
     
     

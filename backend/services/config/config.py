@@ -27,8 +27,8 @@ class ConfigService(ConfigServiceProtocol):
             precipitation_sum="mm/day",
             et0_fao_evapotranspiration="mm/day",
             temperature_2m_mean="C",
-            wind_speed_10m_mean="km/h",
-            shortwave_radiation_sum="MJ/m^2/day"
+            wind_speed_10m_mean="cm/s",
+            shortwave_radiation_sum="La/day"
         ) 
         
     @property

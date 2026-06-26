@@ -17,37 +17,38 @@ class WeatherConverterService(WeatherConverterServiceProtocol):
         "et0_fao_evapotranspiration": "mm/day",
         "temperature_2m_mean": "C",
         "wind_speed_10m_mean": "km/h",
-        "shortwave_radiation_sum": "MJ/m^2/day"
+        "shortwave_radiation_sum": "MJ/m^2/day",
     }
 
     FROM_API_UNITS: dict[str, dict[str, UnitConversion]] = {
-    "precipitation_sum": {
-        "mm/day": {"scale": 1.0, "offset": 0.0},
-        "cm/day": {"scale": 0.1, "offset": 0.0},
-        "in/day": {"scale": 0.0393701, "offset": 0.0},
-    },
-    "et0_fao_evapotranspiration": {
-        "mm/day": {"scale": 1.0, "offset": 0.0},
-        "cm/day": {"scale": 0.1, "offset": 0.0},
-        "in/day": {"scale": 0.0393701, "offset": 0.0},
-    },
-    "temperature_2m_mean": {
-        "C": {"scale": 1.0, "offset": 0.0},
-        "F": {"scale": 1.8, "offset": 32.0},
-        "K": {"scale": 1.0, "offset": 273.15},
-    },
-    "wind_speed_10m_mean": {
-        "km/h": {"scale": 1.0, "offset": 0.0},
-        "m/s": {"scale": 1 / 3.6, "offset": 0.0},
-        "mph": {"scale": 0.621371, "offset": 0.0},
-    },
-    "shortwave_radiation_sum": {
-        "MJ/m^2/day": {"scale": 1.0, "offset": 0.0},
-        "La/day": {"scale": 23.8846, "offset": 0.0},
-        "W/m²": {"scale": 11.574074, "offset": 0.0},
-        "kW/m²": {"scale": 0.011574074, "offset": 0.0},
-    },
-}
+        "precipitation_sum": {
+            "mm/day": {"scale": 1.0, "offset": 0.0},
+            "cm/day": {"scale": 0.1, "offset": 0.0},
+            "in/day": {"scale": 0.0393700787, "offset": 0.0},
+        },
+        "et0_fao_evapotranspiration": {
+            "mm/day": {"scale": 1.0, "offset": 0.0},
+            "cm/day": {"scale": 0.1, "offset": 0.0},
+            "in/day": {"scale": 0.0393700787, "offset": 0.0},
+        },
+        "temperature_2m_mean": {
+            "C": {"scale": 1.0, "offset": 0.0},
+            "F": {"scale": 1.8, "offset": 32.0},
+            "K": {"scale": 1.0, "offset": 273.15},
+        },
+        "wind_speed_10m_mean": {
+            "km/h": {"scale": 1.0, "offset": 0.0},
+            "m/s": {"scale": 1.0 / 3.6, "offset": 0.0},
+            "mph": {"scale": 0.6213711922, "offset": 0.0},
+            "cm/s": {"scale": 100.0 / 3.6, "offset": 0.0},
+        },
+        "shortwave_radiation_sum": {
+            "MJ/m^2/day": {"scale": 1.0, "offset": 0.0},
+            "La/day": {"scale": 23.9005736, "offset": 0.0},
+            "W/m²": {"scale": 11.5740740741, "offset": 0.0},
+            "kW/m²": {"scale": 0.0115740741, "offset": 0.0},
+        },
+    }
     
     def convert(self, weather_data: WeatherResult, units: ConfigUnits) -> WeatherResult:
         

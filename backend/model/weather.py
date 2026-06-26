@@ -24,7 +24,7 @@ class UnitConversion(TypedDict):
     
 type PrecipitationUnits = Literal["cm/day", "mm/day", "in/day"]
 type TemperatureUnits = Literal["C", "F", "K"]
-type WindSpeedUnits = Literal["m/s", "km/h", "mph"]
+type WindSpeedUnits = Literal["m/s", "km/h", "mph", "cm/s"]
 type RadiationUnits = Literal["W/m²", "kW/m²", "MJ/m^2/day", "La/day"]
 type ETZeroUnits = Literal["cm/day", "mm/day", "in/day"]
 

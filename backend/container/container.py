@@ -48,6 +48,7 @@ class Container():
             converter_service=self.weather_converter_service,
             weather_api_service=self.weather_api_service,
             folder_selection_service=self.folder_selection_service,
+            export_service=self.export_service,
         )
         
         

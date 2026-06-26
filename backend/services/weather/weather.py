@@ -7,6 +7,7 @@ import pandas as pd
 from backend.dto.weather.input import WeatherDataRequestDTO
 from backend.model.weather import WeatherResult
 from backend.services.config.config import ConfigServiceProtocol
+from backend.services.export.export import ExportServiceProtocol
 from backend.services.folder.selection import FolderSelectionServiceProtocol
 from backend.services.weather.external_api import WeatherAPIServiceProtocol
 from backend.services.weather.units_converter import WeatherConverterServiceProtocol
@@ -28,11 +29,13 @@ class WeatherService(WeatherServiceProtocol):
         converter_service: WeatherConverterServiceProtocol,
         weather_api_service: WeatherAPIServiceProtocol,
         folder_selection_service: FolderSelectionServiceProtocol,
+        export_service: ExportServiceProtocol,
     ):
         self.config = config
         self.converter_service = converter_service
         self.weather_api_service = weather_api_service
         self.folder_selection_service = folder_selection_service
+        self.export_service = export_service
 
     def generate_weather_data(self, dto: WeatherDataRequestDTO) -> str:
         folder = self.folder_selection_service.get_selected_folder()
@@ -54,5 +57,5 @@ class WeatherService(WeatherServiceProtocol):
             }
         )
         output_path = Path(folder) / dto.file_name
-        df.to_csv(output_path, index=False)
+        self.export_service.export(df, str(output_path))
         return str(output_path)
