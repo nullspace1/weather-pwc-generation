@@ -5,43 +5,42 @@ from unittest.mock import MagicMock
 import pytest
 
 from backend.dto.weather.input import WeatherDataRequestDTO
-from backend.model.weather import ConfigUnits, WeatherDailyData, WeatherResult
+from backend.model.weather import WeatherDailyData, WeatherResult
 from backend.services.export.export import ExportService
 from backend.services.weather.weather import NoOutputFolderSelectedError, WeatherService
 
 
 def _build_service(
-    config: MagicMock | None = None,
     converter_service: MagicMock | None = None,
     weather_api_service: MagicMock | None = None,
     folder_selection_service: MagicMock | None = None,
     export_service: ExportService | None = None,
+    report_cache_service: MagicMock | None = None,
 ) -> tuple[WeatherService, MagicMock, MagicMock, MagicMock, MagicMock]:
-    config = config or MagicMock()
     converter_service = converter_service or MagicMock()
     weather_api_service = weather_api_service or MagicMock()
     folder_selection_service = folder_selection_service or MagicMock()
     export_service = export_service or ExportService()
+    report_cache_service = report_cache_service or MagicMock()
     return (
         WeatherService(
-            config,
             converter_service,
             weather_api_service,
             folder_selection_service,
             export_service,
+            report_cache_service,
         ),
-        config,
         converter_service,
         weather_api_service,
         folder_selection_service,
+        report_cache_service,
     )
 
 
 def test_generate_weather_data_fetches_converts_and_exports(
-    sample_weather_result, default_config_units, tmp_path
+    sample_weather_result, tmp_path
 ):
-    service, config, converter_service, weather_api_service, folder_selection_service = _build_service()
-    config.units = default_config_units
+    service, converter_service, weather_api_service, folder_selection_service, _ = _build_service()
     weather_api_service.get_data.return_value = sample_weather_result
     converter_service.convert.return_value = sample_weather_result
     folder_selection_service.get_selected_folder.return_value = str(tmp_path)
@@ -50,7 +49,7 @@ def test_generate_weather_data_fetches_converts_and_exports(
         lon=13.4,
         from_date="2024-01-01",
         to_date="2024-01-02",
-        file_name="data.wea",
+        report_name="data.wea",
     )
 
     file_path = service.generate_weather_data(dto)
@@ -58,16 +57,32 @@ def test_generate_weather_data_fetches_converts_and_exports(
     weather_api_service.get_data.assert_called_once_with(
         52.5, 13.4, date(2024, 1, 1), date(2024, 1, 2)
     )
-    converter_service.convert.assert_called_once_with(
-        sample_weather_result, default_config_units
-    )
+    converter_service.convert.assert_called_once_with(sample_weather_result)
     assert file_path == str(Path(tmp_path) / "data.wea")
     assert (tmp_path / "data.wea").exists()
 
 
-def test_generate_weather_data_writes_wea_file_format(default_config_units, tmp_path):
-    service, config, converter_service, weather_api_service, folder_selection_service = _build_service()
-    config.units = default_config_units
+def test_generate_weather_data_sanitizes_report_name(tmp_path, sample_weather_result):
+    service, converter_service, weather_api_service, folder_selection_service, _ = _build_service()
+    weather_api_service.get_data.return_value = sample_weather_result
+    converter_service.convert.return_value = sample_weather_result
+    folder_selection_service.get_selected_folder.return_value = str(tmp_path)
+    dto = WeatherDataRequestDTO(
+        lat=52.5,
+        lon=13.4,
+        from_date="2024-01-01",
+        to_date="2024-01-02",
+        report_name="My Report 2024",
+    )
+
+    file_path = service.generate_weather_data(dto)
+
+    assert file_path == str(Path(tmp_path) / "My_Report_2024.wea")
+    assert (tmp_path / "My_Report_2024.wea").exists()
+
+
+def test_generate_weather_data_writes_wea_file_format(tmp_path):
+    service, converter_service, weather_api_service, folder_selection_service, _ = _build_service()
     weather_result = WeatherResult(
         latitude=52.5,
         longitude=13.4,
@@ -88,7 +103,7 @@ def test_generate_weather_data_writes_wea_file_format(default_config_units, tmp_
         lon=13.4,
         from_date="2011-01-01",
         to_date="2011-01-01",
-        file_name="output.wea",
+        report_name="output.wea",
     )
 
     service.generate_weather_data(dto)
@@ -99,17 +114,46 @@ def test_generate_weather_data_writes_wea_file_format(default_config_units, tmp_
 
 
 def test_generate_weather_data_raises_when_no_folder_selected(sample_weather_result):
-    service, config, converter_service, weather_api_service, folder_selection_service = _build_service()
+    service, converter_service, weather_api_service, folder_selection_service, _ = _build_service()
     folder_selection_service.get_selected_folder.return_value = None
     dto = WeatherDataRequestDTO(
         lat=0.0,
         lon=0.0,
         from_date="2024-01-01",
         to_date="2024-01-02",
-        file_name="weather.wea",
+        report_name="weather.wea",
     )
 
     with pytest.raises(NoOutputFolderSelectedError):
         service.generate_weather_data(dto)
 
     weather_api_service.get_data.assert_not_called()
+
+
+def test_generate_weather_data_caches_report_when_requested(
+    sample_weather_result, tmp_path
+):
+    service, converter_service, weather_api_service, folder_selection_service, report_cache_service = _build_service()
+    weather_api_service.get_data.return_value = sample_weather_result
+    converter_service.convert.return_value = sample_weather_result
+    folder_selection_service.get_selected_folder.return_value = str(tmp_path)
+    dto = WeatherDataRequestDTO(
+        lat=52.5,
+        lon=13.4,
+        from_date="2024-01-01",
+        to_date="2024-01-02",
+        report_name="cached-report",
+        save_to_cache=True,
+    )
+
+    file_path = service.generate_weather_data(dto)
+
+    report_cache_service.save_report.assert_called_once_with(
+        "cached-report",
+        file_path,
+        location_name="52.5, 13.4",
+        latitude=52.5,
+        longitude=13.4,
+        from_date="2024-01-01",
+        to_date="2024-01-02",
+    )

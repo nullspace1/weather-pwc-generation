@@ -25,6 +25,7 @@ class FolderState {
       this.error = null
     } catch {
       this.selectedPath = null
+      this.error = 'Failed to load selected folder'
     } finally {
       this.notify()
     }

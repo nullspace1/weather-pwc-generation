@@ -1,11 +1,13 @@
 import { generateWeatherData } from '../lib/api/weather'
+import { savedReportsState } from './savedReportsState'
 
 type Listener = () => void
 
 class WeatherGenerationState {
   fromDate = ''
   toDate = ''
-  fileName = ''
+  reportName = ''
+  saveToCache = false
   savedFilePath: string | null = null
   loading = false
   error: string | null = null
@@ -34,13 +36,18 @@ class WeatherGenerationState {
     this.notify()
   }
 
-  setFileName(fileName: string): void {
-    this.fileName = fileName
+  setReportName(reportName: string): void {
+    this.reportName = reportName
     this.success = false
     this.notify()
   }
 
-  async generate(lat: number, lon: number): Promise<void> {
+  setSaveToCache(saveToCache: boolean): void {
+    this.saveToCache = saveToCache
+    this.notify()
+  }
+
+  async generate(lat: number, lon: number, locationName?: string): Promise<void> {
     this.loading = true
     this.error = null
     this.success = false
@@ -53,10 +60,15 @@ class WeatherGenerationState {
         lon,
         from_date: this.fromDate,
         to_date: this.toDate,
-        file_name: this.fileName,
+        report_name: this.reportName,
+        save_to_cache: this.saveToCache,
+        location_name: locationName,
       })
       this.savedFilePath = response.file_path
       this.success = true
+      if (this.saveToCache) {
+        await savedReportsState.loadReports()
+      }
     } catch {
       this.error = 'Failed to generate weather data'
     } finally {

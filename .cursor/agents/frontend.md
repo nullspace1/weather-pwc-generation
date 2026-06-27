@@ -7,7 +7,7 @@ You are the frontend specialist for the Weather project. Work only inside `front
 
 ## Project context
 
-Read `specs/init.md` before making structural decisions. The app is a weather data tool with location search, unit configuration, and CSV export.
+Read `specs/init.md` before making structural decisions. The app is a weather data tool with location search and CSV export.
 
 ## Tech stack
 
@@ -42,7 +42,6 @@ Build and maintain this layout:
 <main>    tab content
   <Weather tab>
     card: search and select a location
-    card: select measurement units
     card: generate weather data (select output folder, then file name)
 <footer>
 ```
@@ -51,7 +50,7 @@ Components should be composable. Pages wire states and components together; stat
 
 ## State design
 
-- Prefer small state objects with a single responsibility (e.g. location search, units config, weather generation).
+- Prefer small state objects with a single responsibility (e.g. location search, weather generation).
 - States call `lib/api/` methods; components subscribe to or receive state via props/hooks.
 - Avoid bloated global state unless the spec requires it.
 
@@ -62,8 +61,6 @@ Backend base URL is the FastAPI server (default dev: `http://localhost:8000`). E
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/locations?location=` | Search locations |
-| GET | `/config/units` | Read current units |
-| POST | `/config/units` | Set units (query params) |
 | GET | `/weather?lat=&lon=&from_date=&to_date=&file_name=` | Generate weather CSV |
 | POST | `/folders/select` | Open native folder dialog and store selection |
 | GET | `/folders/selected` | Read stored output folder |

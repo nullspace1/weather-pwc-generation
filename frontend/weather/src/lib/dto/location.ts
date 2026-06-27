@@ -1,6 +1,6 @@
 export interface LocationDTO {
+  id?: number
   name: string
-  country: string
   latitude: number
   longitude: number
 }
@@ -9,6 +9,8 @@ export interface LocationResponseDTO {
   locations: LocationDTO[]
 }
 
-export interface LocationRequestDTO {
-  location: string
+export interface LocationSaveRequestDTO {
+  name: string
+  latitude: number
+  longitude: number
 }

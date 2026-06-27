@@ -2,11 +2,18 @@ import type { WeatherDataRequestDTO, WeatherDataResponseDTO } from '../dto/weath
 import { apiGet } from './client'
 
 export function generateWeatherData(request: WeatherDataRequestDTO): Promise<WeatherDataResponseDTO> {
-  return apiGet<WeatherDataResponseDTO>('/weather', {
+  const params: Record<string, string> = {
     lat: String(request.lat),
     lon: String(request.lon),
     from_date: request.from_date,
     to_date: request.to_date,
-    file_name: request.file_name,
-  })
+    report_name: request.report_name,
+  }
+  if (request.save_to_cache) {
+    params.save_to_cache = 'true'
+  }
+  if (request.location_name) {
+    params.location_name = request.location_name
+  }
+  return apiGet<WeatherDataResponseDTO>('/weather', params)
 }

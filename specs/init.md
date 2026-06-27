@@ -15,7 +15,6 @@ Create an initial page structure, as follows:
 < main area - contains the main content >
     < inside the main area, for the weather tab >
         <card for searching and selecting a location>
-        <card for selecting units>
         <card for generating weather data, with path to where the file will be saved>
     </inside the main area>
 < footer area - contains a footer >

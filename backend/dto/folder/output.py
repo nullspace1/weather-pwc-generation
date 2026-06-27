@@ -2,4 +2,4 @@ from pydantic import BaseModel
 
 
 class SelectedFolderDTO(BaseModel):
-    path: str
+    path: str | None = None

@@ -18,7 +18,11 @@ export function WeatherGenerationCard() {
     if (!location.selected) {
       return
     }
-    void generation.generate(location.selected.latitude, location.selected.longitude)
+    void generation.generate(
+      location.selected.latitude,
+      location.selected.longitude,
+      location.selected.name
+    )
   }
 
   const canGenerate =
@@ -26,9 +30,10 @@ export function WeatherGenerationCard() {
     folder.selectedPath !== null &&
     generation.fromDate !== '' &&
     generation.toDate !== '' &&
-    generation.fileName.trim() !== ''
+    generation.reportName.trim() !== ''
 
   return (
+    <div className="weather-generation-card">
     <Card title="Generate weather data">
       <div className="form">
         <label className="field">
@@ -73,14 +78,23 @@ export function WeatherGenerationCard() {
         </div>
 
         <label className="field">
-          <span className="field-label">File name</span>
+          <span className="field-label">Report name</span>
           <input
             type="text"
             className="input"
-            placeholder="data.wea"
-            value={generation.fileName}
-            onChange={(event) => generation.setFileName(event.target.value)}
+            placeholder="my-report"
+            value={generation.reportName}
+            onChange={(event) => generation.setReportName(event.target.value)}
           />
+        </label>
+
+        <label className="field checkbox-field">
+          <input
+            type="checkbox"
+            checked={generation.saveToCache}
+            onChange={(event) => generation.setSaveToCache(event.target.checked)}
+          />
+          <span className="field-label">Save report locally</span>
         </label>
 
         {!location.selected && (
@@ -90,7 +104,10 @@ export function WeatherGenerationCard() {
         {folder.error && <p className="message error">{folder.error}</p>}
         {generation.error && <p className="message error">{generation.error}</p>}
         {generation.success && generation.savedFilePath && (
-          <p className="message success">Weather data saved to {generation.savedFilePath}</p>
+          <p className="message success">
+            Weather data saved to {generation.savedFilePath}
+            {generation.saveToCache && ' and cached locally.'}
+          </p>
         )}
 
         <button
@@ -103,5 +120,6 @@ export function WeatherGenerationCard() {
         </button>
       </div>
     </Card>
+    </div>
   )
 }

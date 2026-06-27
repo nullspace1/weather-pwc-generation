@@ -6,7 +6,7 @@ export function Header() {
     <header className="app-header">
       <div className="brand">
         <img src={logo} alt="" className="brand-logo" />
-        <span className="brand-name">Weather</span>
+        <span className="brand-name">PWC Report Assistant</span>
       </div>
       <TabNav />
     </header>

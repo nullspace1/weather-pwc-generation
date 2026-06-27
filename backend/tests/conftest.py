@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from backend.model.weather import ConfigUnits, WeatherDailyData, WeatherResult
+from backend.model.weather import WeatherDailyData, WeatherResult
 
 
 @pytest.fixture
@@ -18,17 +18,6 @@ def sample_weather_result() -> WeatherResult:
             shortwave_radiation_sum=[5.0, 6.0],
             et0_fao_evapotranspiration=[0.5, 0.6],
         ),
-    )
-
-
-@pytest.fixture
-def default_config_units() -> ConfigUnits:
-    return ConfigUnits(
-        precipitation_sum="mm/day",
-        et0_fao_evapotranspiration="mm/day",
-        temperature_2m_mean="C",
-        wind_speed_10m_mean="km/h",
-        shortwave_radiation_sum="MJ/m^2/day",
     )
 
 

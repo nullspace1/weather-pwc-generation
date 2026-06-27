@@ -4,4 +4,9 @@ from pydantic import BaseModel
 
 
 class LocationRequestDTO(BaseModel):
-    location: str
+    name: str
+    
+class LocationSaveRequestDTO(BaseModel):
+    name: str
+    latitude: float
+    longitude: float

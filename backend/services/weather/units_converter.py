@@ -1,17 +1,24 @@
 
-from typing import Literal, Protocol, TypeVar
-
-
+from typing import Protocol
 
 from backend.model.weather import ConfigUnits, UnitConversion, Units, WeatherResult
 
 
 class WeatherConverterServiceProtocol(Protocol):
-    def convert(self, weather_data: WeatherResult, units: ConfigUnits) -> WeatherResult:
+    def convert(self, weather_data: WeatherResult) -> WeatherResult:
         ...
 
+
 class WeatherConverterService(WeatherConverterServiceProtocol):
-    
+
+    DEFAULT_UNITS = ConfigUnits(
+        precipitation_sum="mm/day",
+        et0_fao_evapotranspiration="mm/day",
+        temperature_2m_mean="C",
+        wind_speed_10m_mean="cm/s",
+        shortwave_radiation_sum="La/day",
+    )
+
     API_UNITS: dict[str, Units] = {
         "precipitation_sum": "mm/day",
         "et0_fao_evapotranspiration": "mm/day",
@@ -49,16 +56,15 @@ class WeatherConverterService(WeatherConverterServiceProtocol):
             "kW/m²": {"scale": 0.0115740741, "offset": 0.0},
         },
     }
-    
-    def convert(self, weather_data: WeatherResult, units: ConfigUnits) -> WeatherResult:
-        
+
+    def convert(self, weather_data: WeatherResult) -> WeatherResult:
+        units = self.DEFAULT_UNITS
         weather_data.daily.precipitation_sum = [self._convert(value, "precipitation_sum", units.precipitation_sum) for value in weather_data.daily.precipitation_sum]
         weather_data.daily.temperature_2m_mean = [self._convert(value, "temperature_2m_mean", units.temperature_2m_mean) for value in weather_data.daily.temperature_2m_mean]
         weather_data.daily.wind_speed_10m_mean = [self._convert(value, "wind_speed_10m_mean", units.wind_speed_10m_mean) for value in weather_data.daily.wind_speed_10m_mean]
         weather_data.daily.shortwave_radiation_sum = [self._convert(value, "shortwave_radiation_sum", units.shortwave_radiation_sum) for value in weather_data.daily.shortwave_radiation_sum]
         weather_data.daily.et0_fao_evapotranspiration = [self._convert(value, "et0_fao_evapotranspiration", units.et0_fao_evapotranspiration) for value in weather_data.daily.et0_fao_evapotranspiration]
         return weather_data
-
 
     def _convert(self, value: float, parameter: str, to_unit: Units) -> float:
         conversion = self.FROM_API_UNITS[parameter][to_unit]

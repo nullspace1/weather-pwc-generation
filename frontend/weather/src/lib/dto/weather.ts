@@ -3,7 +3,9 @@ export interface WeatherDataRequestDTO {
   lon: number
   from_date: string
   to_date: string
-  file_name: string
+  report_name: string
+  save_to_cache?: boolean
+  location_name?: string
 }
 
 export interface WeatherDataResponseDTO {
