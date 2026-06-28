@@ -38,6 +38,8 @@ class StorageService(StorageServiceProtocol):
         self._initialize_database()
         
     def _initialize_database(self) -> None:
+        if Path(self.sqlite_db).exists():
+            return
         mkdir(Path(self.sqlite_db).parent)
         with sqlite3.connect(self.sqlite_db) as conn:
             cursor = conn.cursor()
