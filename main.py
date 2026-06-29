@@ -33,7 +33,6 @@ def main(is_dev: bool = False):
     webview.start()
     
 if __name__ == "__main__":
-    ## add dev argument to run the frontend development server
     import sys
     is_dev = len(sys.argv) > 1 and sys.argv[1] == "dev"
     main(is_dev)
