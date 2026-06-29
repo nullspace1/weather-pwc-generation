@@ -1,6 +1,5 @@
 
 
-from os import mkdir
 from pathlib import Path
 import sqlite3
 from typing import Protocol
@@ -38,9 +37,7 @@ class StorageService(StorageServiceProtocol):
         self._initialize_database()
         
     def _initialize_database(self) -> None:
-        if Path(self.sqlite_db).exists():
-            return
-        mkdir(Path(self.sqlite_db).parent)
+        Path(self.sqlite_db).parent.mkdir(parents=True, exist_ok=True)
         with sqlite3.connect(self.sqlite_db) as conn:
             cursor = conn.cursor()
             cursor.execute("""

@@ -2,11 +2,12 @@
 
 
 
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException, Request
 
 from fastapi.middleware.cors import CORSMiddleware
-
-
+from fastapi.staticfiles import StaticFiles
 
 from backend.container.container import container
 
@@ -50,18 +51,14 @@ app.add_middleware(
 
 
 
-
-
-@app.get("/locations")
-
+@app.get("/api/locations")
 async def root(request: Request) -> LocationResponseDTO:
 
     return container.location_service.get_api_locations(LocationRequestDTO.model_validate(dict(request.query_params)))
 
 
 
-@app.post("/folders/select")
-
+@app.post("/api/folders/select")
 async def select_folder() -> SelectedFolderDTO:
 
     try:
@@ -74,16 +71,14 @@ async def select_folder() -> SelectedFolderDTO:
 
 
 
-@app.get("/folders/selected")
-
+@app.get("/api/folders/selected")
 async def get_selected_folder() -> SelectedFolderDTO:
 
     return SelectedFolderDTO(path=container.folder_selection_service.get_selected_folder())
 
 
 
-@app.get("/weather")
-
+@app.get("/api/weather")
 async def get_weather(request: Request) -> WeatherDataResponseDTO:
 
     try:
@@ -102,48 +97,42 @@ async def get_weather(request: Request) -> WeatherDataResponseDTO:
 
 
 
-@app.get("/weather/locations")
-
+@app.get("/api/weather/locations")
 async def get_stored_locations() -> LocationResponseDTO:
 
     return container.location_service.get_stored_locations()
 
 
 
-@app.post("/weather/locations")
-
+@app.post("/api/weather/locations")
 async def store_location(location: LocationSaveRequestDTO) -> None:
 
     container.location_service.store_location(location)
 
 
 
-@app.delete("/weather/locations/{location_id}")
-
+@app.delete("/api/weather/locations/{location_id}")
 async def delete_stored_location(location_id: int) -> None:
 
     container.location_service.delete_location(location_id)
 
 
 
-@app.get("/weather/reports")
-
+@app.get("/api/weather/reports")
 async def get_cached_reports() -> ReportListResponseDTO:
 
     return ReportListResponseDTO(reports=container.report_cache_service.list_reports())
 
 
 
-@app.delete("/weather/reports/{report_name}")
-
+@app.delete("/api/weather/reports/{report_name}")
 async def delete_cached_report(report_name: str) -> None:
 
     container.report_cache_service.delete_report(report_name)
 
 
 
-@app.post("/weather/reports/{report_name}/export")
-
+@app.post("/api/weather/reports/{report_name}/export")
 async def export_cached_report(report_name: str) -> WeatherDataResponseDTO:
 
     try:
@@ -160,3 +149,7 @@ async def export_cached_report(report_name: str) -> WeatherDataResponseDTO:
 
     return WeatherDataResponseDTO(file_path=file_path)
 
+ROOT = Path(__file__).resolve().parent
+FRONTEND_DIR = ROOT.parent / "frontend" / "dist"
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

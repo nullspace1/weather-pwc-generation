@@ -1,3 +1,3 @@
-from .container import container
+from backend.container.container import container
 
 __all__ = ["container"]
