@@ -120,3 +120,4 @@ desktop.ini
 
 pytest.ini
 *.cpython-312.pyc
+.spec

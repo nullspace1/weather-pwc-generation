@@ -29,7 +29,7 @@ def main(is_dev: bool = False):
     server_thread = threading.Thread(target=lambda: uvicorn.run("backend.app:app", host="localhost", port=port, log_level="info"))
     server_thread.start()
 
-    webview.create_window("Weather App", f"http://localhost:{port if not is_dev else 5173}", width=1200, height=800)
+    webview.create_window("PWC Report Assistant", f"http://localhost:{port if not is_dev else 5173}", width=1200, height=800)
     webview.start()
     
 if __name__ == "__main__":
